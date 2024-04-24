@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.11"
 clockify-api-client = "^0.1.0"
 
+[tool.poetry.scripts]
+clockify-waybar-plugin = "clockify_waybar_plugin:main"
 
 [build-system]
 requires = ["poetry-core"]
