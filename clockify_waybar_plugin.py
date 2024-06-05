@@ -37,7 +37,9 @@ def main() -> None:
 
             prev_entry = None
             while True:
-                time_entries = client.time_entries.get_time_entries(workspace_id, user_id)
+                time_entries = client.time_entries.get_time_entries(
+                    workspace_id, user_id
+                )
                 entry = time_entries[0]
                 if entry != prev_entry:
                     project = get_project_name(client, workspace_id, entry["projectId"])
