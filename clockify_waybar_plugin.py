@@ -28,22 +28,25 @@ def output_waybar(text: str, cls: str | None = None, **kwargs):
 
 
 def main() -> None:
-    # output_waybar("Loading")
-    client = ClockifyAPIClient().build(API_KEY, API_URL)
-    workspaces = client.workspaces.get_workspaces()
-    workspace_id = workspaces[0]["id"]  # TODO: CHECK
-    user_id = client.users.get_current_user()["id"]
-
-    prev_entry = None
     while True:
-        time_entries = client.time_entries.get_time_entries(workspace_id, user_id)
-        entry = time_entries[0]
-        if entry != prev_entry:
-            project = get_project_name(client, workspace_id, entry["projectId"])
-            icon = "not-running" if entry["timeInterval"]["end"] else "running"
-            output_waybar(project, icon, alt=icon)
-            prev_entry = entry
-        sleep(10)
+        try:
+            client = ClockifyAPIClient().build(API_KEY, API_URL)
+            workspaces = client.workspaces.get_workspaces()
+            workspace_id = workspaces[0]["id"]  # TODO: CHECK
+            user_id = client.users.get_current_user()["id"]
+
+            prev_entry = None
+            while True:
+                time_entries = client.time_entries.get_time_entries(workspace_id, user_id)
+                entry = time_entries[0]
+                if entry != prev_entry:
+                    project = get_project_name(client, workspace_id, entry["projectId"])
+                    icon = "not-running" if entry["timeInterval"]["end"] else "running"
+                    output_waybar(project, icon, alt=icon)
+                    prev_entry = entry
+                sleep(10)
+        except Exception:
+            sleep(30)
 
 
 if __name__ == "__main__":
